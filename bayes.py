@@ -54,3 +54,29 @@ class BinaryBayesModel(object):
         predictions = self.getPredictions(test_data)
         accuracy = _getAccuracy(test_data, predictions)
         return (accuracy, predictions)
+
+
+
+class BalancedFairBayesModel(BinaryBayesModel):
+
+    def discrimination_measure(self, index, label, test_data):
+        predictions = self.getPredictions(test_data)
+        test_global_summary = discrete_summarize_total(test_data)
+        # entitnes in the lablel
+        results = {}
+
+        for key in self.global_summary[0][index].keys():
+            results[key] = 0
+
+        for i in range(0, len(predictions)):
+            if predictions[i] == label:
+                results[test_data[i][index]] += 1
+
+        for key, value in test_global_summary[0][index].iteritems():
+            results[key] = float(results[key])/value
+
+        # warning, this only supports 2 classes for now:
+
+        values = results.values()
+
+        return max(values) - min(values)
