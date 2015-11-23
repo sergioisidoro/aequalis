@@ -1,5 +1,5 @@
 from bayes_utils import *
-from bayes import BinaryBayesModel, BalancedFairBayesModel
+from bayes import *
 
 data_file = './data/adult.data'
 data = loadCsv(data_file)
@@ -17,11 +17,10 @@ summary = discrete_summarize_by_class(data)
 
 global_summary = discrete_summarize_total(data)
 
-basic_model = BalancedFairBayesModel()
+basic_model = SplitedFairBayesModel(sensitive_parameter_indexes=[9])
 basic_model.train(data)
 
 basic_model.evaluate(data[0])
-
 
 test_data_file = './data/adult.test'
 test_data = loadCsv(test_data_file)
