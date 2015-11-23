@@ -1,0 +1,116 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+
+% My packages
+\usepackage{hyperref}
+% Quotes
+\usepackage{csquotes}
+% Pretty pictures
+\usepackage{graphicx}
+
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+\normalfont \normalsize 
+\textsc{Aalto University, School of science} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge  Three naive Bayes approaches for discrimination-free classification \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Sergio Isidoro} % Your name
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+
+\maketitle % Print the title
+
+%----------------------------------------------------------------------------------------
+%	PROBLEM 1
+%----------------------------------------------------------------------------------------
+
+\section{Problem Overview}
+
+The paper being analysed, , proposes 3 naieve bayes methods for discrimination free classification. For benchmarking, the paper uses the data set provided by UCI Machine learning repository \ref{uc_repo} on the Census data, trying to predict if an individual has high or low income (>=50 or <50)
+This work aims to review and replicate the results of the paper and its' methods.
+
+\section{The discrimination measure}
+
+The discrimination measeure, and the algorithm later on it based, are slightly flawed. The discrimination measure is described as:
+\begin{displayquote}
+A simple solution is the discrimination score, which we define as the difference between the probability of a male and a female of being in the high-income class
+\end{displayquote}
+First of all, this leads to an asymetric concept of discrimination (we assume an a priory knowledge that the discrimination hapens only in the class \textit{female}). In the first algorithm we see that the optimization criteria is \textit{while discrimination > 0}, leading to the possibility of the algorithm reaching a discrimination that is negative, ie. positive discrimination to the previously discriminated class.
+ 
+Also, this discrimination measure is sensitive to population size and bias. Let's say that all men access credit, and only the most successful women access credit. This measure would assume that the probabilty of a men accessing credit should be the same as the probability of women accesing credit, which will still discriminate women that are successfull and trying to access credit. 
+
+The first problem can be easily solved, by slighly changing the discrimination measure to:
+
+$$ disc = | P(max\_gender) - P(min\_gender) |$$
+
+Where $P(max\_gender)$ is the probability of the gender of which has the biggest probability of being classified in the high income class (In this case, in the initial case, that would be the male class), and so on for $P(min\_gender) $. That way the algorithm presented next could be optimized using, for example, Monte Carlo method to maximize the inverse of the discrimination value: $1/disc$.
+
+The second problem is more difficult to tackle, but other work in this area try to \textbf{TODO TODO TODO}
+%------------------------------------------------
+
+\begin{thebibliography}{9} 
+
+\bibitem{paymentreport2014} \emph{World Payments Report 2014}, CapGemini, Royal Bank of Scotland, 2015.
+
+\bibitem{uc_repo} \emph{{UCI} Machine Learning Repository}
+M. Lichman, 2013, http://archive.ics.uci.edu/ml , University of California, Irvine, School of Information and Computer Sciences
+
+
+\end{thebibliography}
+
+\end{document}
