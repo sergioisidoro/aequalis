@@ -97,6 +97,8 @@ class BinaryBayesModel(object):
 
 
 class SplitedFairBayesModel(BinaryBayesModel):
+    # This model splits the model into sub models individually, for each
+    # value of a sensitive variable.
 
     sensitive_params_summaries = {}
     sensitve_param_indexes = []
@@ -143,3 +145,84 @@ class SplitedFairBayesModel(BinaryBayesModel):
                 bestProb = probability
                 bestLabel = classValue
         return bestLabel
+
+
+class BalancedBayesModel(BinaryBayesModel):
+    # WARNING, THIS IS A SPECIFIC IMPLEMENTATION FOR THE dataset
+    # FOLLOWING THE PAPER Calders10
+
+    def discrimination_measure(
+            self, index, discriminated_class, privileged_class,
+            positive_label, test_data):
+        # An asimteric disctimination measure
+        predictions = self.getPredictions(test_data)
+
+        test_global_summary = discrete_summarize_total(test_data)
+        # entitnes in the lablel
+        results = {}
+        total = {}
+
+        possible_values = list(
+            set([sample[index] for sample in test_data]))
+        for possible_value in possible_values:
+            results[possible_value] = 0
+            total[possible_value] = 0
+
+        for i in range(0, len(predictions)):
+            if predictions[i] == positive_label:
+                results[test_data[i][index]] += 1
+                total[test_data[i][index]] += 1
+
+        for key, value in test_global_summary[0][index].iteritems():
+            results[key] = float(results[key])/value
+
+        # warning, this only supports 2 classes for now:
+        # return the pair - (Discrimination score , Total positive labels)
+        return (
+            results[privileged_class] - results[discriminated_class],
+            total[privileged_class] + total[discriminated_class])
+
+    def balance_model(
+            self, index, discriminated_class, privileged_class,
+            positive_label, negative_label, train_data):
+        balance_resutls = []
+
+        total_positive_labels = len(
+            filter(lambda x: x[index] == positive_label, train_data))
+
+        (disc, assinged_labels) = \
+            self.discrimination_measure(index, discriminated_class,
+                                        privileged_class, positive_label,
+                                        train_data)
+
+        accuracy = self.test(train_data)[0]
+        balance_resutls.append((disc, accuracy))
+        # print "%s , %s " % (disc, accuracy)
+
+        while disc > 0:
+            if assinged_labels > total_positive_labels:
+                self.summaries[positive_label][0][index][discriminated_class] = \
+                    self.summaries[positive_label][0][index][discriminated_class] + \
+                    0.01 * self.summaries[negative_label][0][index][privileged_class]
+
+                self.summaries[negative_label][0][index][privileged_class] = \
+                    self.summaries[positive_label][0][index][discriminated_class] - \
+                    0.01 * self.summaries[negative_label][0][index][privileged_class]
+            else:
+                self.summaries[negative_label][0][index][privileged_class] = \
+                    self.summaries[negative_label][0][index][privileged_class] + \
+                    0.01 * self.summaries[positive_label][0][index][discriminated_class]
+
+                self.summaries[positive_label][0][index][privileged_class] = \
+                    self.summaries[negative_label][0][index][privileged_class] - \
+                    0.01 * self.summaries[positive_label][0][index][discriminated_class]
+
+            accuracy = self.test(train_data)[0]
+            balance_resutls.append((disc, accuracy))
+            # print "%s , %s " % (disc, accuracy)
+            (disc, assinged_labels) = \
+                self.discrimination_measure(index, discriminated_class,
+                                            privileged_class, positive_label,
+                                            train_data)
+
+        return balance_resutls

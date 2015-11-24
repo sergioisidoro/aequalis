@@ -94,13 +94,26 @@ First of all, this leads to an asymetric concept of discrimination (we assume an
  
 Also, this discrimination measure is sensitive to population size and bias. Let's say that all men access credit, and only the most successful women access credit. This measure would assume that the probabilty of a men accessing credit should be the same as the probability of women accesing credit, which will still discriminate women that are successfull and trying to access credit. 
 
-The first problem can be easily solved, by slighly changing the discrimination measure to:
-
-$$ disc = | P(max\_gender) - P(min\_gender) |$$
-
-Where $P(max\_gender)$ is the probability of the gender of which has the biggest probability of being classified in the high income class (In this case, in the initial case, that would be the male class), and so on for $P(min\_gender) $. That way the algorithm presented next could be optimized using, for example, Monte Carlo method to maximize the inverse of the discrimination value: $1/disc$.
-
+The first problem could be solved by adding a conter measure for the case the discrimination goes bellow zero, instead of halting on 0.
 The second problem is more difficult to tackle, but other work in this area try to \textbf{TODO TODO TODO}
+
+\section{Methods}
+The methods used were as closely replicated to the methods in \ref{calders10} as possible. For discretization of variables, values were ranked into 4 bins (analogous to very low, low, high, very high), but further processing of the bins, used in \ref{calders10} was discarted. There is no reference to data cleaning (althoug that reference is made in the benchmarks of the data set \ref{dataset}), so no action was taken to remove rows with missing atrributes. The missing attibutes were, instead, used as an attribute itself (with value "?"). 
+
+\section{Results}
+
+
+BAYES MODEL:
+
+Accuracy: 78.4165591794 
+
+Discrimination score: 0.398512741018 
+
+
+2M MODEL:
+Accuracy: 78.5332596278 
+Discrimination score: 0.165316892258 
+
 %------------------------------------------------
 
 \begin{thebibliography}{9} 
