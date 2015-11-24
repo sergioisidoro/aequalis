@@ -7,7 +7,7 @@ from collections import Counter
 import multiprocessing
 pool = multiprocessing.Pool()
 
-# Reused some code to avoid boilerplate code
+# Reused some code to avoid boilerplate
 # Credit to:
 # http://machinelearningmastery.com/naive-bayes-classifier-scratch-python/
 

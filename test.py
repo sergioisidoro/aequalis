@@ -63,17 +63,19 @@ print ("Discrimination score: %s " %
 
 
 fig, ax1 = plt.subplots()
-ax1.plot(list((t[0] for t in plot_data)))
+line = ax1.plot(list((t[0] for t in plot_data)))
+plt.setp(line, color='b')
 ax1.set_ylabel('Discrimination score')
 
 for tl in ax1.get_yticklabels():
         tl.set_color('b')
 
 ax2 = ax1.twinx()
-ax2.plot(list((t[1] for t in plot_data)))
+line2 = ax2.plot(list((t[1] for t in plot_data)))
 
 for tl in ax2.get_yticklabels():
         tl.set_color('r')
+plt.setp(line2, color='r')
 ax2.set_ylabel('Accuracy')
 
 ax2.set_xlabel('Runs')
