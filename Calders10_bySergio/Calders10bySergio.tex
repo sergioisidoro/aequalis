@@ -86,7 +86,7 @@ The paper being analysed, calders10 \cite{calders10}, proposes 3 naive bayes met
 This work aims to review and replicate some of the results and methods
 
 \section{The discrimination measure}
-The discrimination measure used in calders10, and in the algorithms later on it based, are slightly flawed. The discrimination measure is described as:
+The discrimination measure used in calders10, and in the later algorithms based on it, are slightly flawed. The discrimination measure is described as:
 \begin{displayquote}
 A simple solution is the discrimination score, which we define as the difference between the probability of a male and a female of being in the high-income class
 \end{displayquote}
@@ -94,16 +94,16 @@ First of all, this leads to an asymetric concept of discrimination (we assume a 
 \\
 Also, this discrimination measure is sensitive to population size and bias. Let's say that all men access credit, but only the most successful women do. This measure assumes that the probabilty of a man and women being given credit should be the same. This will still discriminate women that are successfull and trying to access credit, since a less successfull man would access credit due to the bias of the population
 \\
-The first problem could be solved by using a absolute discrimination measure, and make necessary ajustments to the used algorithms. Anoter solution would be to optimize to reach the closest number to zero, instead of trying to reach a disctimination $<50$
+The first problem could be solved by using a absolute discrimination measure, and make necessary ajustments to the used algorithms. Another solution would be optimizing in order to reach the closest number to zero, instead of trying to reach a disctimination $<50$
 
-The second problem is more difficult to tackle, but other works have presented some interesting metrics. Ruggieri10 \cite{Ruggieri10} compares the confidence of an association rule with and without a parameter, resulting in a fairly good measure of direct discrimination independent of the population of each side of the sensitve parameter. Zemel13 \cite{Zemel13} uses a concept of Individual Fairness in k-nearest neighbours, comparing how similar samples (except the sensitive parameter) are classified (eg. 2 samples that are exacly similar in every way except gender, are classified differently).
+The second problem is more difficult to tackle, but other works have presented some interesting metrics. Ruggieri10 \cite{Ruggieri10} compares the confidence of an association rule with and without a parameter, resulting in a fairly good measure of direct discrimination independent of the population of each side of the sensitve parameter. Zemel13 \cite{Zemel13} uses a concept of Individual Fairness in k-nearest neighbours, comparing how similar samples (except for the sensitive parameter) are classified (eg. 2 samples that are exactly similar in every way but the gender, are classified differently).
 
 \section{Methods}
 The methods used were as closely replicated to the methods in calders10 \cite{calders10} as possible. For discretization of variables, values were ranked into 4 bins (analogous to very low, low, high, very high).
 
-No other  action was taken to remove rows with missing atrributes. The missing attibutes were, instead, used as attributes (with value "?"). 
+No other action was taken to remove rows with missing values. Those where used instead as attributes with value "?". 
 
-The methods implemented and presented here are the Modifed Bayes model, which balances the classification post trainig, optimizing the model to a discrimination closer to zero as possible, while maintaining the global probability. The other, 2M Model, breaks the classifier into 2, one for each value of the sensitive parameter. The results follow: 
+The methods implemented and presented here are the Modifed Bayes model, which balances the classification post training, optimizing the model to a discrimination as close to zero as possible, while maintaining the global probability of the positive class. The other, 2M Model, breaks the classifier into 2, one for each value of the sensitive parameter. The results follow: 
 
 \section{Results}
 \begin{table}[hb]
