@@ -1,0 +1,35 @@
+## Discrimination free Naive Bayes
+
+This is a project for a seminar on Fairness-aware machine learning (Autumn 2015)
+
+It aims to implement some of the methods described in the paper Calders10 (see research folder),
+introducing ways to make a Naive Bayes classifier non discriminatory
+
+## Code
+
+The majority of the code can be found in bayes.py
+
+Some auxiliary functions for the models can be found in bayes_utils. (some
+  credit to  Jason Brownlee -
+   http://machinelearningmastery.com/naive-bayes-classifier-scratch-python/ -
+   as some of his code was used to reduce boilerplate code)
+
+# BinaryBayesModel
+
+A simple Naive Bayes Model
+
+# SplitedFairBayesModel
+
+This model splits the dataset into ```n``` subsets, one for each of the values
+of the sensitve parameter that we do not want to discriminate against.
+
+By creating a model for each of the subset, it minimzes the discrimination
+of the model.
+
+# BalancedBayesModel
+
+This model balances the model, making it more fair, tweaking the likelyhood by
+changing the number of occurences in the model. It makes it, however, without
+disturbing the probability of classifying sample x as the positive class (eg.
+  if we talk about loan attribution, we want to keep the total number of
+  loans the same as before)
