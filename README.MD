@@ -18,7 +18,7 @@ Some auxiliary functions for the models can be found in bayes_utils. (some
 
 A simple Naive Bayes Model
 
-# SplitedFairBayesModel
+# SplittedFairBayesModel (2M Model)
 
 This model splits the dataset into ```n``` subsets, one for each of the values
 of the sensitve parameter that we do not want to discriminate against.
@@ -26,10 +26,27 @@ of the sensitve parameter that we do not want to discriminate against.
 By creating a model for each of the subset, it minimzes the discrimination
 of the model.
 
-# BalancedBayesModel
+# BalancedBayesModel (MODIFIED BAYES)
 
 This model balances the model, making it more fair, tweaking the likelyhood by
 changing the number of occurences in the model. It makes it, however, without
 disturbing the probability of classifying sample x as the positive class (eg.
   if we talk about loan attribution, we want to keep the total number of
   loans the same as before)
+
+
+# RESULTS
+```
+NORMAL MODEL:
+Accuracy: 78.4165591794
+Discrimination score: 0.398512741018
+
+2M MODEL:
+Accuracy: 78.5332596278
+Discrimination score: 0.165316892258
+
+MODIFIEND MODEL:
+Accuracy: 75.9412812481
+Discrimination score: -0.0101233590263
+
+```
