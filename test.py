@@ -37,7 +37,7 @@ print ("Accuracy: %s " % basic_model.test(test_data)[0])
 print ("Discrimination score: %s " %  basic_model.discrimination_measure(9, '>50K', test_data))
 
 # 2M BAYES MODEL
-two_m_model = SplitedFairBayesModel(sensitive_parameter_indexes=[9])
+two_m_model = SplitFairBayesModel(sensitive_parameter_indexes=[9])
 two_m_model.train(data)
 
 print ("2M MODEL:")
@@ -61,7 +61,6 @@ print ("Discrimination score: %s " %
             index=9, discriminated_class="Female", privileged_class="Male",
             positive_label='>50K', test_data=test_data)[0])
 
-
 fig, ax1 = plt.subplots()
 line = ax1.plot(list((t[0] for t in plot_data)))
 plt.setp(line, color='b')
@@ -79,5 +78,4 @@ plt.setp(line2, color='r')
 ax2.set_ylabel('Accuracy')
 
 ax2.set_xlabel('Runs')
-
 plt.show()

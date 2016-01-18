@@ -1,6 +1,8 @@
 from bayes_utils import *
 
+
 class BinaryBayesModel(object):
+    # Basic Bayes Model fro reference
     summaries = None
     global_summary = None
     total_len = 0
@@ -96,7 +98,7 @@ class BinaryBayesModel(object):
         return max(values) - min(values)
 
 
-class SplitedFairBayesModel(BinaryBayesModel):
+class SplitFairBayesModel(BinaryBayesModel):
     # This model splits the model into sub models individually, for each
     # value of a sensitive variable.
 
@@ -104,13 +106,11 @@ class SplitedFairBayesModel(BinaryBayesModel):
     sensitve_param_indexes = []
 
     def __init__(self, sensitive_parameter_indexes):
-        super(SplitedFairBayesModel,self).__init__()
+        super(SplitFairBayesModel, self).__init__()
         self.sensitve_param_indexes = sensitive_parameter_indexes
 
     def train(self, train_data):
         # WARNING, ONLY WORKS CURRENTY WITH ONE SENSITIVE PARAMETER.
-        # SPLITING THE MODEL IN EXPONENCIAL NUMBER OF MODELS, AND WILL
-        # BORK THE WHOLE THING
 
         # Lets train a model for each sensitive parameters
         for index in self.sensitve_param_indexes:
@@ -130,7 +130,7 @@ class SplitedFairBayesModel(BinaryBayesModel):
 
     def predict(self, input):
         # Decide what to model to use:
-        # WARNING! THIS ALSO ONLY SUPPORTS ONE SENSITIVE VARIABLE YET !!
+        # WARNING! THIS ALSO ONLY SUPPORTS ONE SENSITIVE VARIABLE !!
         sensitive_index = self.sensitve_param_indexes[0]
         sentivive_value = input[sensitive_index]
 
@@ -148,8 +148,8 @@ class SplitedFairBayesModel(BinaryBayesModel):
 
 
 class BalancedBayesModel(BinaryBayesModel):
-    # WARNING, THIS IS A SPECIFIC IMPLEMENTATION FOR THE dataset
-    # FOLLOWING THE PAPER Calders10
+    # WARNING, this is a specific implementation for the dataset
+    # following the paper Calders10
 
     def discrimination_measure(
             self, index, discriminated_class, privileged_class,
@@ -158,7 +158,6 @@ class BalancedBayesModel(BinaryBayesModel):
         predictions = self.getPredictions(test_data)
 
         test_global_summary = discrete_summarize_total(test_data)
-        # entitnes in the lablel
         results = {}
         total = {}
 
@@ -197,7 +196,6 @@ class BalancedBayesModel(BinaryBayesModel):
 
         accuracy = self.test(train_data)[0]
         balance_resutls.append((disc, accuracy))
-        # print "%s , %s " % (disc, accuracy)
 
         while disc > 0:
             if assinged_labels > total_positive_labels:
@@ -219,7 +217,7 @@ class BalancedBayesModel(BinaryBayesModel):
 
             accuracy = self.test(train_data)[0]
             balance_resutls.append((disc, accuracy))
-            # print "%s , %s " % (disc, accuracy)
+
             (disc, assinged_labels) = \
                 self.discrimination_measure(index, discriminated_class,
                                             privileged_class, positive_label,

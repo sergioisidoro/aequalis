@@ -14,26 +14,25 @@ Some auxiliary functions for the models can be found in bayes_utils. (some
    http://machinelearningmastery.com/naive-bayes-classifier-scratch-python/ -
    as some of his code was used to reduce boilerplate code)
 
-# BinaryBayesModel
+# Binary Bayes Model
 
 A simple Naive Bayes Model
 
-# SplittedFairBayesModel (2M Model)
+# Split Fair Bayes Model (2M Model)
 
 This model splits the dataset into ```n``` subsets, one for each of the values
-of the sensitve parameter that we do not want to discriminate against.
+of the sensitive parameter that we do not want to discriminate against.
 
-By creating a model for each of the subset, it minimzes the discrimination
+By creating a model for each of the subset, it minimizes the discrimination
 of the model.
 
-# BalancedBayesModel (MODIFIED BAYES)
+# Balanced Bayes Model (MODIFIED BAYES)
 
-This model balances the model, making it more fair, tweaking the likelyhood by
-changing the number of occurences in the model. It makes it, however, without
+This model balances the dataset, making it more fair, tweaking the likelihood by
+changing the number of occurrences in the model. It makes it, however, without
 disturbing the probability of classifying sample x as the positive class (eg.
   if we talk about loan attribution, we want to keep the total number of
   loans the same as before)
-
 
 # RESULTS
 ```
@@ -45,7 +44,7 @@ Discrimination score: 0.398512741018
 Accuracy: 78.5332596278
 Discrimination score: 0.165316892258
 
-MODIFIEND MODEL:
+MODIFIED MODEL:
 Accuracy: 75.9412812481
 Discrimination score: -0.0101233590263
 

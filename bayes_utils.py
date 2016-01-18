@@ -1,3 +1,6 @@
+# A set of tools
+
+
 import math
 import csv
 import string
@@ -7,12 +10,13 @@ from collections import Counter
 import multiprocessing
 pool = multiprocessing.Pool()
 
-# Reused some code to avoid boilerplate
+# Some code was reused to avoid boilerplate.
 # Credit to:
 # http://machinelearningmastery.com/naive-bayes-classifier-scratch-python/
 
 
 def loadCsv(filename):
+    # Loads a CSV
     lines = csv.reader(open(filename, "rb"))
     dataset = list(lines)
     for i in range(len(dataset)):
@@ -21,14 +25,18 @@ def loadCsv(filename):
 
 
 def uniform_data(dataset):
+    # Some labels have . and extra spaces. Unoform data will strip spaces and
+    # remove .
     return [[t.strip().replace(".", "") for t in i] for i in dataset]
 
 
 def mean(numbers):
+    # Computes the mean of list of numbers
     return sum(numbers)/float(len(numbers))
 
 
 def stdev(numbers):
+    # Computes the standar deviation of a list of numbers
     avg = mean(numbers)
     variance = sum([pow(x-avg, 2) for x in numbers])/float(len(numbers)-1)
     return math.sqrt(variance)
@@ -51,6 +59,7 @@ def separateByClass(dataset):
 def summarize(dataset):
     # Dataset is a list of lists. Zip will aggregate all the same features
     # eg. [a,b,c] [g,t,e] -> [(a,g), (b,t), (c,e)]
+    # Returns (mean_of_dataset, stdev_of_dataset) for each feature
     summaries = [
         (mean(attribute), stdev(attribute))
         for attribute in zip(*dataset)]
@@ -61,10 +70,10 @@ def summarize(dataset):
 
 def discretize_variable(dataset, index):
     # Inneficiently puts a constant variable into one of the 4 percentiles
-
     print "Discretizing... variable %s" % index
     variable_values = [sample[index] for sample in dataset]
-    new_values = stats.rankdata(variable_values, "average")/len(variable_values)
+    new_values = stats.rankdata(
+        variable_values, "average")/len(variable_values)
 
     for i in range(0, len(dataset)):
         dataset[i][index] = str(int(round((new_values[i]*100)/25)))
@@ -74,6 +83,8 @@ def discretize_variable(dataset, index):
 def discrete_summarize(dataset):
     # Dataset is a list of lists. Zip will aggregate all the same features
     # eg. [a,b,c] [g,t,e] -> [(a,g), (b,t), (c,e)]
+    # Counts occurency of each discrete occurrence of feature. eg {'<10': 10}
+    # Returns (summaries, )
     summaries = [
         dict(Counter(attribute))
         for attribute in zip(*dataset)]
@@ -83,7 +94,8 @@ def discrete_summarize(dataset):
 
 
 def summarizeByClass(dataset):
-    print dataset
+    # Creates a summary for each class value
+    # eg {positive: ((mean, stdv)(mean, stdv)}
     separated = separateByClass(dataset)
     summaries = {}
     for classValue, instances in separated.iteritems():
@@ -92,19 +104,25 @@ def summarizeByClass(dataset):
 
 
 def discrete_summarize_by_class(dataset):
+    # Creates a summary for each class value
+    # eg {positive: ((mean, stdv)(mean, stdv)}
     separated = separateByClass(dataset)
     summaries = {}
     for classValue, instances in separated.iteritems():
         summaries[classValue] = discrete_summarize(instances)
     return summaries
 
+
 def discrete_summarize_total(dataset):
+    # summrize the total data
     summaries = discrete_summarize(dataset)
     return summaries
+
 
 def calculateProbability(x, mean, stdev):
     exponent = math.exp(-(math.pow(x-mean, 2)/(2*math.pow(stdev, 2))))
     return (1 / (math.sqrt(2*math.pi) * stdev)) * exponent
+
 
 def calculateDiscreteProbability(x, mean, stdev):
     exponent = math.exp(-(math.pow(x-mean, 2)/(2*math.pow(stdev, 2))))
